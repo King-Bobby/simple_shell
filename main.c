@@ -7,7 +7,7 @@ int main(int ac, char **av)
 	size_t n = 0;
 	ssize_t num;
 	pid_t my_pid;
-	int status;
+	int status, i;
 
 	(void)ac; (void)av;
 
@@ -20,8 +20,14 @@ int main(int ac, char **av)
 			return (-1);
 		}
 
-		token = strtok(command, "\n");
-		char *arr[] = {token, NULL};
+		token = strtok(command, " \n");
+		char **arr = malloc(sizeof(char *) * num);
+		arr[0] = token;
+
+		for (i = 1; token != NULL; i++){
+			token = strtok(NULL, " \n");
+			arr[i] = token;
+		}
 
 		my_pid = fork();
 		if (my_pid == -1){
