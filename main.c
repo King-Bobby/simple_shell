@@ -15,8 +15,10 @@ int main(int ac, char **av)
 	{
 		printf("$ ");
 		num = getline(&command, &n, stdin);
-		if (num == -1)
+		if (num == -1){
+			putchar('\n');
 			return (-1);
+		}
 
 		token = strtok(command, "\n");
 		char *arr[] = {token, NULL};
