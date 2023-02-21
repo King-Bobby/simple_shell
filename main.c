@@ -23,6 +23,8 @@ int main(int ac, char **av)
 		token = strtok(command, " \n");
 		char **arr = malloc(sizeof(char *) * num);
 		arr[0] = token;
+		if (strcmp(arr[0], "exit") == 0)
+			exit(0);
 
 		for (i = 1; token != NULL; i++){
 			token = strtok(NULL, " \n");
