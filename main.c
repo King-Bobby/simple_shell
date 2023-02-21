@@ -2,23 +2,38 @@
 
 int main(int ac, char **av)
 {
-	char *prompt = "$ "; char *buffer; char *buffer_copy;
+	char *token;
+	char *command = NULL;
 	size_t n = 0;
-	ssize_t nchars_read;
-	const char *delim = " ";
+	ssize_t num;
+	pid_t my_pid;
+	int status;
 
 	(void)ac; (void)av;
 
 	while (1)
 	{
-		printf("%s", prompt);
-		nchars_read = getline(&buffer, &n, stdin);
-		if (nchars_read == -1){
-			printf("Exiting Shell...\n");
+		printf("$ ");
+		num = getline(&command, &n, stdin);
+		if (num == -1)
 			return (-1);
+
+		token = strtok(command, "\n");
+		char *arr[] = {token, NULL};
+
+		my_pid = fork();
+		if (my_pid == -1){
+			perror("Error");
+			return (1);
 		}
-		printf("%s", buffer);
+		else if (my_pid == 0){
+			execve(arr[0], arr, NULL);
+		}
+		else{
+			wait(&status);
+		}
+		
 	}
-	free(buffer);
+	free(command);
 	return (0);
 }
