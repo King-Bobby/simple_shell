@@ -1,9 +1,16 @@
 #include "shell.h"
 
+/**
+ * main - main code
+ * ac: argument count
+ * av: argument vector
+ * env: environment
+ * Return: 0 on success
+ */
 int main(int ac, char **av, char *env[])
 {
-	char *token;
-	char *command = NULL;
+	char *token; char *command = NULL;
+	char **arr;
 	size_t n = 0;
 	ssize_t num;
 	pid_t my_pid;
@@ -22,7 +29,7 @@ int main(int ac, char **av, char *env[])
 		}
 
 		token = strtok(command, " \n");
-		char **arr = malloc(sizeof(char *) * num);
+		arr = malloc(sizeof(char *) * num);
 		arr[0] = token;
 		if (strcmp(arr[0], "exit") == 0)
 			exit(0);
