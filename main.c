@@ -1,6 +1,6 @@
 #include "shell.h"
 
-int main(int ac, char **av)
+int main(int ac, char **av, char *env[])
 {
 	char *token;
 	char *command = NULL;
@@ -17,6 +17,7 @@ int main(int ac, char **av)
 		num = getline(&command, &n, stdin);
 		if (num == -1){
 			putchar('\n');
+			free(command);
 			return (-1);
 		}
 
@@ -25,6 +26,10 @@ int main(int ac, char **av)
 		arr[0] = token;
 		if (strcmp(arr[0], "exit") == 0)
 			exit(0);
+		if (strcmp(arr[0], "env") == 0){
+			for (i = 0; env[i] != NULL; i++)
+				printf("%s\n", env[i]);
+		}
 
 		for (i = 1; token != NULL; i++){
 			token = strtok(NULL, " \n");
