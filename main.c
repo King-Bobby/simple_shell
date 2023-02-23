@@ -1,63 +1,47 @@
 #include "shell.h"
 
-/**
- * main - main code
- * ac: argument count
- * av: argument vector
- * env: environment
- * Return: 0 on success
- */
-int main(int ac, char **av, char *env[])
+int main(void)
 {
-	char *token; char *command = NULL;
-	char **arr;
+	char *command = NULL, *command_copy = NULL, *token;
+	char **argv;
 	size_t n = 0;
-	ssize_t num;
-	pid_t my_pid;
-	int status, i;
-
-	(void)ac; (void)av;
+	ssize_t num_chars;
+	const char *delim = " \n";
+	int num_tokens, i;
 
 	while (1)
 	{
 		printf("$ ");
-		num = getline(&command, &n, stdin);
-		if (num == -1){
+		num_chars = getline(&command, &n, stdin);
+		if (num_chars == -1){
 			putchar('\n');
-			free(command);
 			return (-1);
 		}
 
-		token = strtok(command, " \n");
-		arr = malloc(sizeof(char *) * num);
-		arr[0] = token;
-		if (strcmp(arr[0], "exit") == 0)
-			exit(0);
-		if (strcmp(arr[0], "env") == 0){
-			for (i = 0; env[i] != NULL; i++)
-				printf("%s\n", env[i]);
+		command_copy = malloc(sizeof(char) * num_chars);
+		if (command_copy == NULL){
+			perror("tsh: memory allocation error\n");
+			return (-1);
 		}
+		strcpy(command_copy, command);
+	
+		token = strtok(command, delim);
+		for (num_tokens = 0; token != NULL; num_tokens++)
+			token = strtok(NULL, delim);
+		num_tokens++;
 
-		for (i = 1; token != NULL; i++){
-			token = strtok(NULL, " \n");
-			arr[i] = token;
+		argv = malloc(sizeof(char *) * num_tokens);
+		token = strtok(command_copy, delim);
+		for (i = 0; token != NULL; i++){
+			argv[i] = malloc(sizeof(char) * strlen(token));
+			strcpy(argv[i], token);
+			token = strtok(NULL, delim);
 		}
+		argv[i] = NULL;
 
-		my_pid = fork();
-		if (my_pid == -1){
-			perror("Error");
-			return (1);
-		}
-		else if (my_pid == 0){
-			execve(arr[0], arr, NULL);
-			if (execve(arr[0], arr, NULL) == -1)
-				perror("Error");
-		}
-		else{
-			wait(&status);
-		}
-		
+		execmd(argv);
 	}
+	free(command_copy);
 	free(command);
 	return (0);
 }
