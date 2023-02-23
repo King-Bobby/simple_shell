@@ -9,6 +9,9 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <sys/stat.h>
 
+void execmd(char **argv);
+char *get_location(char *command);
 
 #endif

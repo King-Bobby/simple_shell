@@ -51,7 +51,7 @@ int main(int ac, char **av, char *env[])
 		else if (my_pid == 0){
 			execve(arr[0], arr, NULL);
 			if (execve(arr[0], arr, NULL) == -1)
-				perror("Error:");
+				perror("Error");
 		}
 		else{
 			wait(&status);
