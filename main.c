@@ -17,26 +17,24 @@ int main(void)
 	{
 		printf("$ ");
 		num_chars = getline(&command, &n, stdin);
-		if (num_chars == -1){
+		if (num_chars == -1)
+		{
 			putchar('\n');
 			return (-1);
 		}
 
 		command_copy = malloc(sizeof(char) * num_chars);
-		if (command_copy == NULL){
-			perror("tsh: memory allocation error\n");
-			return (-1);
-		}
 		strcpy(command_copy, command);
-	
+
 		token = strtok(command, delim);
 		for (num_tokens = 0; token != NULL; num_tokens++)
 			token = strtok(NULL, delim);
 		num_tokens++;
 
-		argv = malloc(sizeof(char *) * num_tokens);
+		argv =  malloc(sizeof(char *) * num_tokens);
 		token = strtok(command_copy, delim);
-		for (i = 0; token != NULL; i++){
+		for (i = 0; token != NULL; i++)
+		{
 			argv[i] = malloc(sizeof(char) * strlen(token));
 			strcpy(argv[i], token);
 			token = strtok(NULL, delim);
