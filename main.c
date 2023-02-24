@@ -25,12 +25,12 @@ int main(void)
 
 		command_copy = malloc(sizeof(char) * num_chars);
 		strcpy(command_copy, command);
-		
+
 		token = strtok(command, delim);
 		for (num_tokens = 0; token != NULL; num_tokens++)
 			token = strtok(NULL, delim);
 		num_tokens++;
-		
+
 		argv =  malloc(sizeof(char *) * num_tokens);
 		token = strtok(command_copy, delim);
 		for (i = 0; token != NULL; i++)
@@ -40,7 +40,7 @@ int main(void)
 			token = strtok(NULL, delim);
 		}
 		argv[i] = NULL;
-		
+
 		execmd(argv);
 	}
 	free(command_copy);
