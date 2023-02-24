@@ -1,5 +1,10 @@
 #include "shell.h"
 
+/**
+ * get_location - gets location of command in PATH
+ * @command: command to find
+ * Return: Always 0
+ */
 char *get_location(char *command)
 {
 	char *path, *path_copy, *path_token, *file_path;
@@ -20,7 +25,7 @@ char *get_location(char *command)
 			strcat(file_path, "/");
 			strcat(file_path, command);
 			strcat(file_path, "\0");
-			
+
 			if (stat(file_path, &buffer) == 0)
 			{
 				free(path_copy);

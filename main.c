@@ -1,5 +1,9 @@
 #include "shell.h"
 
+/**
+ * main - code that compiles all my functions
+ * Return: 0 on success and -1 on failure
+ */
 int main(void)
 {
 	char *command = NULL, *command_copy = NULL, *token;

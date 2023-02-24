@@ -1,5 +1,9 @@
 #include "shell.h"
 
+/**
+ * execmd - it contains the execve function
+ * @argv: argument vector
+ */
 void execmd(char **argv)
 {
 	char *command = NULL, *actual_command = NULL;
