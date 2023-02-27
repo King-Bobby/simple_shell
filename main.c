@@ -1,49 +1,44 @@
 #include "shell.h"
 
 /**
- * main - code that compiles all my functions
- * Return: 0 on success and -1 on failure
+ * main - entry point
+ * @ac: arg count
+ * @av: arg vector
+ *
+ * Return: 0 on success, 1 on error
  */
-int main(void)
+int main(int ac, char **av)
 {
-	char *command = NULL, *command_copy = NULL, *token;
-	char **argv;
-	size_t n = 0;
-	ssize_t num_chars;
-	const char *delim = " \n";
-	int num_tokens, i;
+	info_t info[] = { INFO_INIT };
+	int fd = 2;
 
-	while (1)
+	asm ("mov %1, %0\n\t"
+		"add $3, %0"
+		: "=r" (fd)
+		: "r" (fd));
+
+	if (ac == 2)
 	{
-		printf("$ ");
-		num_chars = getline(&command, &n, stdin);
-		if (num_chars == -1)
+		fd = open(av[1], O_RDONLY);
+		if (fd == -1)
 		{
-			putchar('\n');
-			return (-1);
+			if (errno == EACCES)
+				exit(126);
+			if (errno == ENOENT)
+			{
+				_eputs(av[0]);
+				_eputs(": 0: Can't open ");
+				_eputs(av[1]);
+				_eputchar('\n');
+				_eputchar(BUF_FLUSH);
+				exit(127);
+			}
+			return (EXIT_FAILURE);
 		}
-
-		command_copy = malloc(sizeof(char) * num_chars);
-		strcpy(command_copy, command);
-
-		token = strtok(command, delim);
-		for (num_tokens = 0; token != NULL; num_tokens++)
-			token = strtok(NULL, delim);
-		num_tokens++;
-
-		argv =  malloc(sizeof(char *) * num_tokens);
-		token = strtok(command_copy, delim);
-		for (i = 0; token != NULL; i++)
-		{
-			argv[i] = malloc(sizeof(char) * strlen(token));
-			strcpy(argv[i], token);
-			token = strtok(NULL, delim);
-		}
-		argv[i] = NULL;
-
-		execmd(argv);
+		info->readfd = fd;
 	}
-	free(command_copy);
-	free(command);
-	return (0);
+	populate_env_list(info);
+	read_history(info);
+	hsh(info, av);
+	return (EXIT_SUCCESS);
 }
